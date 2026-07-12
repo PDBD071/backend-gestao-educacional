@@ -47,6 +47,7 @@ def criar_aluno(aluno: schemas.AlunoCreate, db: Session = Depends(get_db)):
 
 
 # Listar alunos
+
 @app.get("/alunos", response_model=list[schemas.AlunoResponse])
 def listar_alunos(db: Session = Depends(get_db)):
     return db.query(models.Aluno).all()
@@ -92,3 +93,77 @@ def excluir_aluno(
     db.commit()
 
     return {"mensagem": "Aluno excluído com sucesso"}
+
+# ==========================
+# CRUD DE CURSOS
+# ==========================
+
+# Criar curso
+@app.post("/cursos", response_model=schemas.CursoResponse)
+def criar_curso(curso: schemas.CursoCreate, db: Session = Depends(get_db)):
+    novo_curso = models.Curso(
+        titulo=curso.titulo
+    )
+
+    db.add(novo_curso)
+    db.commit()
+    db.refresh(novo_curso)
+
+    return novo_curso
+
+
+# Listar cursos
+@app.get("/cursos", response_model=list[schemas.CursoResponse])
+def listar_cursos(db: Session = Depends(get_db)):
+    return db.query(models.Curso).all()
+
+# ==========================
+# MATRÍCULAS - SPRINT 2
+# ==========================
+
+# Criar matrícula
+@app.post("/matriculas", response_model=schemas.MatriculaResponse)
+def criar_matricula(
+    matricula: schemas.MatriculaCreate,
+    db: Session = Depends(get_db)
+):
+    nova_matricula = models.Matricula(
+        aluno_id=matricula.aluno_id,
+        curso_id=matricula.curso_id
+    )
+
+    db.add(nova_matricula)
+    db.commit()
+    db.refresh(nova_matricula)
+
+    return nova_matricula
+
+# Listar cursos de um aluno
+@app.get("/alunos/{aluno_id}/cursos", response_model=list[schemas.CursoResponse])
+def listar_cursos_do_aluno(
+    aluno_id: int,
+    db: Session = Depends(get_db)
+):
+    cursos = (
+        db.query(models.Curso)
+        .join(models.Matricula)
+        .filter(models.Matricula.aluno_id == aluno_id)
+        .all()
+    )
+
+    return cursos
+
+# Listar alunos de um curso
+@app.get("/cursos/{curso_id}/alunos", response_model=list[schemas.AlunoResponse])
+def listar_alunos_do_curso(
+    curso_id: int,
+    db: Session = Depends(get_db)
+):
+    alunos = (
+        db.query(models.Aluno)
+        .join(models.Matricula)
+        .filter(models.Matricula.curso_id == curso_id)
+        .all()
+    )
+
+    return alunos
