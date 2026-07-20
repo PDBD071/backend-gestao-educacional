@@ -5,6 +5,8 @@ import models
 import schemas
 from database import Base, SessionLocal, engine
 
+from app.routes import aluno_routes
+
 
 # Cria as tabelas no banco
 Base.metadata.create_all(bind=engine)
@@ -12,6 +14,10 @@ Base.metadata.create_all(bind=engine)
 
 # Cria a aplicação
 app = FastAPI()
+
+
+# Conecta as rotas organizadas
+app.include_router(aluno_routes.router)
 
 
 # Abre e fecha a conexão com o banco
@@ -40,7 +46,6 @@ def inicio():
 # ==========================
 
 
-# Criar aluno
 @app.post("/alunos", response_model=schemas.AlunoResponse)
 def criar_aluno(
     aluno: schemas.AlunoCreate,
@@ -60,7 +65,6 @@ def criar_aluno(
 
 
 
-# Listar alunos
 @app.get("/alunos", response_model=list[schemas.AlunoResponse])
 def listar_alunos(
     db: Session = Depends(get_db)
@@ -70,7 +74,6 @@ def listar_alunos(
 
 
 
-# Buscar aluno por ID
 @app.get("/alunos/{aluno_id}", response_model=schemas.AlunoResponse)
 def buscar_aluno(
     aluno_id: int,
@@ -91,7 +94,6 @@ def buscar_aluno(
 
 
 
-# Atualizar aluno
 @app.put("/alunos/{aluno_id}", response_model=schemas.AlunoResponse)
 def atualizar_aluno(
     aluno_id: int,
@@ -119,7 +121,6 @@ def atualizar_aluno(
 
 
 
-# Excluir aluno
 @app.delete("/alunos/{aluno_id}")
 def excluir_aluno(
     aluno_id: int,
@@ -150,7 +151,6 @@ def excluir_aluno(
 # ==========================
 
 
-# Criar curso
 @app.post("/cursos", response_model=schemas.CursoResponse)
 def criar_curso(
     curso: schemas.CursoCreate,
@@ -169,7 +169,6 @@ def criar_curso(
 
 
 
-# Listar cursos
 @app.get("/cursos", response_model=list[schemas.CursoResponse])
 def listar_cursos(
     db: Session = Depends(get_db)
@@ -184,19 +183,12 @@ def listar_cursos(
 # ==========================
 
 
-# Criar matrícula
 @app.post("/matriculas", response_model=schemas.MatriculaResponse)
 def criar_matricula(
     matricula: schemas.MatriculaCreate,
     db: Session = Depends(get_db)
 ):
 
-    # ==========================
-    # REGRAS DE NEGÓCIO - SPRINT 3
-    # ==========================
-
-
-    # Verifica se o aluno existe
     aluno = db.query(models.Aluno).filter(
         models.Aluno.id == matricula.aluno_id
     ).first()
@@ -208,7 +200,6 @@ def criar_matricula(
         )
 
 
-    # Verifica se o curso existe
     curso = db.query(models.Curso).filter(
         models.Curso.id == matricula.curso_id
     ).first()
@@ -220,11 +211,11 @@ def criar_matricula(
         )
 
 
-    # Verifica se a matrícula já existe
     matricula_existente = db.query(models.Matricula).filter(
         models.Matricula.aluno_id == matricula.aluno_id,
         models.Matricula.curso_id == matricula.curso_id
     ).first()
+
 
     if matricula_existente:
         raise HTTPException(
@@ -233,11 +224,11 @@ def criar_matricula(
         )
 
 
-    # Cria a matrícula
     nova_matricula = models.Matricula(
         aluno_id=matricula.aluno_id,
         curso_id=matricula.curso_id
     )
+
 
     db.add(nova_matricula)
     db.commit()
@@ -247,14 +238,12 @@ def criar_matricula(
 
 
 
-# Listar cursos de um aluno
 @app.get("/alunos/{aluno_id}/cursos", response_model=list[schemas.CursoResponse])
 def listar_cursos_do_aluno(
     aluno_id: int,
     db: Session = Depends(get_db)
 ):
 
-    # Verifica se o aluno existe
     aluno = db.query(models.Aluno).filter(
         models.Aluno.id == aluno_id
     ).first()
@@ -277,14 +266,12 @@ def listar_cursos_do_aluno(
 
 
 
-# Listar alunos de um curso
 @app.get("/cursos/{curso_id}/alunos", response_model=list[schemas.AlunoResponse])
 def listar_alunos_do_curso(
     curso_id: int,
     db: Session = Depends(get_db)
 ):
 
-    # Verifica se o curso existe
     curso = db.query(models.Curso).filter(
         models.Curso.id == curso_id
     ).first()
