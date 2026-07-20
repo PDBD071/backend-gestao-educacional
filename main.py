@@ -7,10 +7,10 @@ from database import Base, SessionLocal, engine
 
 from app.routes import aluno_routes
 from app.routes import curso_routes
+from app.routes import matricula_routes
 
 # Cria as tabelas no banco
 Base.metadata.create_all(bind=engine)
-
 
 # Cria a aplicação
 app = FastAPI()
@@ -19,6 +19,7 @@ app = FastAPI()
 # Conecta as rotas organizadas
 app.include_router(aluno_routes.router)
 app.include_router(curso_routes.router)
+app.include_router(matricula_routes.router)
 
 # Abre e fecha a conexão com o banco
 def get_db():
