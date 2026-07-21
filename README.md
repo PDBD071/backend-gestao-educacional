@@ -2,11 +2,11 @@
 
 ## Descrição
 
-Este projeto foi desenvolvido como parte do desafio de Backend utilizando FastAPI e SQLite.
+Este projeto foi desenvolvido como parte do desafio de Backend utilizando **FastAPI** e **SQLite**.
 
 A aplicação permite o cadastro de alunos e cursos, além do gerenciamento de matrículas entre alunos e cursos por meio de uma API REST.
 
-O projeto foi desenvolvido em quatro sprints, contemplando CRUD, relacionamento entre tabelas, regras de negócio e organização do código.
+O projeto foi desenvolvido em quatro sprints, contemplando a implementação do CRUD de alunos, relacionamento entre tabelas, regras de negócio e organização do código seguindo uma arquitetura em camadas.
 
 ---
 
@@ -24,7 +24,7 @@ O projeto foi desenvolvido em quatro sprints, contemplando CRUD, relacionamento 
 ## Estrutura do Projeto
 
 ```text
-backend-crud-alunos/
+backend-gestao-educacional/
 │
 ├── app/
 │   ├── controllers/
@@ -37,13 +37,16 @@ backend-crud-alunos/
 │   │   ├── curso_routes.py
 │   │   └── matricula_routes.py
 │   │
-│   └── services/
-│       └── aluno_service.py
+│   ├── services/
+│   │   └── aluno_service.py
+│   │
+│   └── __init__.py
 │
 ├── database.py
 ├── main.py
 ├── models.py
 ├── schemas.py
+├── database.db
 ├── requirements.txt
 ├── README.md
 └── .gitignore
@@ -62,7 +65,7 @@ git clone https://github.com/PDBD071/backend-gestao-educacional.git
 ### 2. Acessar a pasta do projeto
 
 ```bash
-cd backend-crud-alunos
+cd backend-gestao-educacional
 ```
 
 ### 3. Criar o ambiente virtual
@@ -73,27 +76,33 @@ python -m venv venv
 
 ### 4. Ativar o ambiente virtual
 
-Windows:
+**Windows**
 
 ```bash
 venv\Scripts\activate
 ```
 
-### 5. Instalar as dependências
+### 5. (Opcional) Atualizar o pip
+
+```bash
+python -m pip install --upgrade pip
+```
+
+### 6. Instalar as dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 6. Executar a aplicação
+### 7. Executar a aplicação
 
 ```bash
 uvicorn main:app --reload
 ```
 
-### 7. Acessar a documentação da API
+### 8. Acessar a documentação da API
 
-Após iniciar a aplicação, abra o navegador e acesse:
+Após iniciar a aplicação, acesse no navegador:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -105,7 +114,7 @@ http://127.0.0.1:8000/docs
 
 O projeto utiliza o banco de dados **SQLite**.
 
-A conexão com o banco é configurada no arquivo `database.py` por meio da variável:
+A conexão é configurada no arquivo `database.py` por meio da variável:
 
 ```python
 DATABASE_URL = "sqlite:///./database.db"
