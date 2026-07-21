@@ -1,10 +1,12 @@
+from sqlalchemy.orm import Session
+
 import models
 import schemas
 
 
 def criar_curso(
     curso: schemas.CursoCreate,
-    db
+    db: Session
 ):
 
     novo_curso = models.Curso(
@@ -18,7 +20,8 @@ def criar_curso(
     return novo_curso
 
 
-
-def listar_cursos(db):
+def listar_cursos(
+    db: Session
+):
 
     return db.query(models.Curso).all()

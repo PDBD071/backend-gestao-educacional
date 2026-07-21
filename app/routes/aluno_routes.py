@@ -23,7 +23,6 @@ def get_db():
         db.close()
 
 
-
 # Criar aluno
 @router.post("/", response_model=schemas.AlunoResponse)
 def criar_aluno(
@@ -43,7 +42,6 @@ def criar_aluno(
     return novo_aluno
 
 
-
 # Listar alunos
 @router.get("/", response_model=list[schemas.AlunoResponse])
 def listar_alunos(
@@ -51,7 +49,6 @@ def listar_alunos(
 ):
 
     return db.query(models.Aluno).all()
-
 
 
 # Buscar aluno por ID
@@ -72,7 +69,6 @@ def buscar_aluno(
         )
 
     return aluno
-
 
 
 # Atualizar aluno
@@ -102,7 +98,6 @@ def atualizar_aluno(
     return aluno_db
 
 
-
 # Excluir aluno
 @router.delete("/{aluno_id}")
 def excluir_aluno(
@@ -126,16 +121,3 @@ def excluir_aluno(
     return {
         "mensagem": "Aluno excluído com sucesso"
     }
-    from app.controllers import aluno_controller
-
-
-@router.post("/matriculas", response_model=schemas.MatriculaResponse)
-def criar_matricula(
-    matricula: schemas.MatriculaCreate,
-    db: Session = Depends(get_db)
-):
-
-    return aluno_controller.criar_matricula(
-        matricula,
-        db
-    )

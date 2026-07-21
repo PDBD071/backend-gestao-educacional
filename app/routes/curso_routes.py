@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 import schemas
-
 from database import SessionLocal
 from app.controllers import curso_controller
 
@@ -24,7 +23,6 @@ def get_db():
         db.close()
 
 
-
 # Criar curso
 @router.post("/", response_model=schemas.CursoResponse)
 def criar_curso(
@@ -36,7 +34,6 @@ def criar_curso(
         curso,
         db
     )
-
 
 
 # Listar cursos

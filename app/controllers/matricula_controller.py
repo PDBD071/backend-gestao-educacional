@@ -21,7 +21,6 @@ def criar_matricula(
             detail="Aluno não encontrado"
         )
 
-
     # Verifica se o curso existe
     curso = db.query(models.Curso).filter(
         models.Curso.id == matricula.curso_id
@@ -33,13 +32,11 @@ def criar_matricula(
             detail="Curso não encontrado"
         )
 
-
     # Verifica matrícula duplicada
     matricula_existente = db.query(models.Matricula).filter(
         models.Matricula.aluno_id == matricula.aluno_id,
         models.Matricula.curso_id == matricula.curso_id
     ).first()
-
 
     if matricula_existente:
         raise HTTPException(
@@ -47,13 +44,11 @@ def criar_matricula(
             detail="Aluno já matriculado neste curso"
         )
 
-
     # Cria matrícula
     nova_matricula = models.Matricula(
         aluno_id=matricula.aluno_id,
         curso_id=matricula.curso_id
     )
-
 
     db.add(nova_matricula)
     db.commit()
